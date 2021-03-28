@@ -24,3 +24,27 @@ class Process:
             temp.append(proc.waitingTime)
 
         return sum(temp)/len(temp)
+
+    @staticmethod
+    def print_array(proc):
+        for each in proc:
+            print(each)
+            if proc.index(each) == len(proc)-1:
+                print("<---------- END OF PROCESSES ---------->")
+            else:
+                print("<----------- NEXT PROCESSES ----------->")
+
+    @staticmethod
+    def print_proc_with_leftover(obj):
+        print(obj)
+        print(obj.leftovers)
+
+
+def inputFunction():
+    processes = []
+    while True:
+        temporary = Process()
+        processes.append(temporary)
+        flag = str(input('Want to continue[Y/N]: ')).lower()
+        if flag == 'n':
+            return processes
