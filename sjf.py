@@ -1,18 +1,10 @@
-from main import Process
+from main import Process, inputFunction
 import sys
 
-processes = list()
-while True:
-    temporary = Process()
-    processes.append(temporary)
-    flag = str(input('Want to continue[Y/N]: ')).lower()
-    if flag == 'n':
-        break
+processes = inputFunction()
 
 print("The entered Information is provided below:")
-for proc in processes:
-    print(proc)
-    print("<--------- Next --------->")
+Process.print_array(processes)
 
 flag = input("Is input correct [Y/N]: ").lower()
 if flag == 'n':
@@ -24,9 +16,10 @@ choice = input("Preemptive or Non-Preemptive[P/N]: ").lower()
 processes = Process.sort_processes(processes, 'arrivalTime')
 last_end_time = processes[0].arrivalTime
 ordered_sjf = []
-if choice == 'n':
-    print("Performing Non - Preemptive SJF\n\n")
 
+if choice == 'n':
+    print("Performing Non - Preemptive SJF\n")
+    print("The processes in the order of execution is provided below:")
     while True:
         if len(processes) == 0:
             break
@@ -49,12 +42,10 @@ if choice == 'n':
 
             # Completion time or time when processing of process is completed ....
             processing.endTime = last_end_time
+            processing.leftovers = 0
             ordered_sjf.append(processing)
 
-    for each in ordered_sjf:
-        print(each)
-        print("<---------------- NEXT ---------------->")
-
+    Process.print_proc_with_leftover(ordered_sjf)
     print(f"The waiting time: {sum([proc.waitingTime for proc in ordered_sjf])/len(ordered_sjf)}")
     print(f'The turn around time is {sum([proc.endTime - proc.startTime for proc in ordered_sjf])/len(ordered_sjf)}')
 else:
