@@ -35,9 +35,14 @@ class Process:
                 print("<----------- NEXT PROCESSES ----------->")
 
     @staticmethod
-    def print_proc_with_leftover(obj):
-        print(obj)
-        print(obj.leftovers)
+    def print_proc_with_leftover(obj_array):
+        for each in obj_array:
+            print(each)
+            print(f"Leftovers: {each.leftovers}")
+            if obj_array.index(each) == len(obj_array)-1:
+                print("<---------- END OF PROCESSES ---------->")
+            else:
+                print("<----------- NEXT PROCESSES ----------->")
 
 
 def inputFunction():
