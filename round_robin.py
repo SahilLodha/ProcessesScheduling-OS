@@ -1,38 +1,51 @@
-from main import Process
-from sys import exit
+from main import Process, inputFunction
+import copy
 
-processes = []
-
-while True:
-    temp = Process()
-    processes.append(temp)
-    choice = input("Do you want to Continue[Y/N]: ").lower()
-    if choice == 'n':
-        break
+processes = inputFunction()
 
 processes = Process.sort_processes(processes, 'arrivalTime')
-timeDelta = int(input("Enter the time frame: "))
-first_arrival = processes[0].arrivalTime
-print(first_arrival)
-i = 0
+timeDelta = float(input("Enter the time frame: "))
+current_time = processes[0].arrivalTime
+process_execution_order = []
+
+ready_queue = []
+
 while True:
-    execution_time = first_arrival
-    arrival_list = [proc for proc in processes if proc.arrivalTime <= execution_time]
 
-    if (len(arrival_list) == 0) & (len(processes) != 0):
-        execution_time = min([proc.arrivalTime for proc in processes])
-        arrival_list = [proc for proc in processes if proc.arrivalTime <= execution_time]
+    new_processes = [proc for proc in processes if proc.arrivalTime <= current_time and proc not in ready_queue]
+    ready_queue = new_processes + ready_queue
 
-    for proc in arrival_list:
-        if proc.leftovers <= timeDelta:
-            execution_time += proc.leftovers
-            proc.leftovers = 0
-            processes.remove(proc)
+    # end of all process ...
+    if len(ready_queue) == 0 and len(processes) == 0:
+        break
+
+    # Dealing with cases where cpu is in rest condition ...
+    if len(ready_queue) == 0:
+        current_time = Process.sort_processes(processes, 'arrivalTime')[0].arrivalTime
+        continue
+
+    # Dealing with general case ...
+    for process in ready_queue:
+        if process.leftovers <= timeDelta:
+            process.startTime = current_time
+            current_time += process.leftovers
+            if process.endTime is not None:
+                process.waitingTime += (current_time - process.endTime)
+            process.leftovers = 0
+            process.endTime = current_time
+            ready_queue.remove(process)
+            processes.remove(process)
         else:
-            proc.leftovers -= timeDelta
-            execution_time = execution_time + timeDelta
+            process.startTime = current_time
+            if process.endTime is not None:
+                process.waitingTime += (current_time - process.endTime)
+            else:
+                process.waitingTime = current_time - process.arrivalTime
+            current_time += timeDelta
+            process.leftovers -= timeDelta
+            process.endTime = current_time
 
-        proc.waitingTime += execution_time - proc.arrivalTime
-        proc.arrivalTime = execution_time
-        print(proc)
-        print(proc.leftovers)
+        process_execution_order.append(copy.deepcopy(process))
+
+
+Process.print_proc_with_leftover(process_execution_order)

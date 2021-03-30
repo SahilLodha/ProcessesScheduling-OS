@@ -44,6 +44,15 @@ class Process:
             else:
                 print("<----------- NEXT PROCESSES ----------->")
 
+    @staticmethod
+    def print_proc_name(obj_array):
+        for each in obj_array:
+            print(each.processName)
+            if obj_array.index(each) == len(obj_array)-1:
+                print("<---------- END OF PROCESSES ---------->")
+            else:
+                print("<----------- NEXT PROCESSES ----------->")
+
 
 def inputFunction():
     processes = []

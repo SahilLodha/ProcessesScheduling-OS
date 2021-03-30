@@ -1,4 +1,4 @@
-# Ignoring the Python Virtual Inviroment files as they are not required i.e. no additional Packages are used.
+# Ignoring the Python Virtual Enviroment files as they are not required i.e. no additional Packages are used and some other folders.
 /PyEnv/
 /.idea/
-/__pycache__/
+/__pycache_/
